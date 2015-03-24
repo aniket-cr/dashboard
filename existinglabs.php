@@ -475,6 +475,23 @@
                                     var emailID = "<?php echo $_SESSION['email']; ?>";
                                     displayLabsArg(emailID);
                                 }
+								
+								$('body').on('click','.savebutton',function()
+								{
+									console.log("edit labs called");
+									var id = document.getElementById("id").value;
+									var sname = document.getElementById("snameField").value;
+                                    var fname = document.getElementById("fnameField").value;
+									var department = document.getElementById("departmentField").value;
+									var city = document.getElementById("cityField").value;
+									var country = document.getElementById("countryField").value;
+									var pincode = document.getElementById("pincodeField").value;
+                                    var description = document.getElementById("descriptionField").value;
+									var siteLink = document.getElementById("linkField").value;
+									var emailID = "<?php echo $_SESSION['email']; ?>";
+                                    editLabsArg(emailID,id,sname,fname,department,city,country,pincode,description,siteLink);
+								});
+									
                                 window.onload = displayLabs();
                                 //var textboxId = $('#editname1').parent().find('input[type="text"]')[1].id;
                                 //.on('click','.toggle-item',function(e)

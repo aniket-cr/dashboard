@@ -59,4 +59,22 @@
 		}
 		echo json_encode($json);
 	}
+	
+	if($add_lab == 2) // edit the lab
+	{
+		$sname = str_replace("'","\'", $_REQUEST['sname']);
+		$fname = str_replace("'","\'", $_REQUEST['fname']);
+		$department = str_replace("'","\'", $_REQUEST['department']);
+		$fname = str_replace("'","\'", $_REQUEST['fname']);
+		$city = str_replace("'","\'", $_REQUEST['city']);
+		$country = str_replace("'","\'", $_REQUEST['country']);
+		$pincode = str_replace("'","\'", $_REQUEST['pincode']);
+		$description = str_replace("'","\'", $_REQUEST['description']);
+		$sitelink = str_replace("'","\'", $_REQUEST['sitelink']);
+		$labID = str_replace("'","\'", $_REQUEST['id']);
+		$query = "UPDATE labs SET sname='$sname',fname='$fname',department='$department',city='$city',country='$country',
+		pincode='$pincode',description='$description',sitelink='$sitelink' WHERE labID=$labID;";
+		echo $query;
+		$result = mysqli_query($connect,$query);
+	}
 ?>
