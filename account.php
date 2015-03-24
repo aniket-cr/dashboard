@@ -4,7 +4,10 @@
 <head>
     <?php
     session_start();
+
     ob_start();
+
+    $_SESSION['name']="Aniket";
     ?>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

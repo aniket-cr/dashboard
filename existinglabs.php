@@ -5,6 +5,59 @@
     <?php
     session_start();
     ob_start();
+
+    $_SESSION['name']="aniket";
+    $name=$_SESSION['name'];
+    $_SESSION['email']="aniket.sachdeva@gmail.com";
+    include('config.php');
+
+    
+
+$db_table = "user"; // Your Table Name where you want to Store Your Image. 
+
+$db = mysql_connect($servername, $username, $password); 
+mysql_select_db($dbname,$db);
+
+    
+
+$uploadDir = 'logos/'; //Image Upload Folder
+if(isset($_POST['Submit']))
+{
+$fileName = $_FILES['Photo']['name'];
+$tmpName  = $_FILES['Photo']['tmp_name'];
+$fileSize = $_FILES['Photo']['size'];
+$fileType = $_FILES['Photo']['type'];
+$filePath = $uploadDir . $fileName;
+$result = move_uploaded_file($tmpName, $filePath);
+if (!$result) {
+echo "Error uploading file";
+exit;
+}
+if(!get_magic_quotes_gpc())
+{
+    $fileName = addslashes($fileName);
+    $filePath = addslashes($filePath);
+}
+$query = "UPDATE user set image='$filePath' where name='$name';";
+
+mysql_query($query) or die('Error, query failed'); 
+
+
+}
+
+
+$query2 = "SELECT image from user where name='$name';";
+$results = mysql_query($query2)  or die('Error, query2 failed');
+$row = mysql_fetch_array($results);
+
+
+
+?>
+
+
+
+
+
     ?>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -155,7 +208,12 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <img id="logo" src="http://static.dnaindia.com/sites/default/files/2015/01/14/301718-cristiano-ronaldo.jpg">
+                        <form name="Image" enctype="multipart/form-data" action="existinglabs.php" method="POST">
+                        <input type="file" name="Photo" size="2000000" accept="image/gif, image/jpeg, image/x-ms-bmp, image/x-png" size="26"><br/>
+                        <INPUT type="submit" class="button" name="Submit" value="  Submit  "> 
+                        &nbsp;&nbsp;<INPUT type="reset" class="button" value="Cancel">
+                        </form>
+                        <img id="logo" src="<?php echo $row['image']; ?>">
                     </li>
                     <li>
                         <a href="existinglabs.php"><i class="fa fa-fw fa-dashboard"></i>Existing Labs</a>
