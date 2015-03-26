@@ -6,17 +6,14 @@
     session_start();
     ob_start();
 
-    $_SESSION['name']="aniket";
     $name=$_SESSION['name'];
-    $_SESSION['email']="aniket.sachdeva@gmail.com";
     include('config.php');
 
     
 
 $db_table = "user"; // Your Table Name where you want to Store Your Image. 
 
-$db = mysql_connect($servername, $username, $password); 
-mysql_select_db($dbname,$db);
+$db = mysqli_connect($servername, $username, $password,$dbname); 
 
     
 
@@ -40,15 +37,15 @@ if(!get_magic_quotes_gpc())
 }
 $query = "UPDATE user set image='$filePath' where name='$name';";
 
-mysql_query($query) or die('Error, query failed'); 
+mysqli_query($db,$query) or die('Error, query failed'); 
 
 
 }
 
 
 $query2 = "SELECT image from user where name='$name';";
-$results = mysql_query($query2)  or die('Error, query2 failed');
-$row = mysql_fetch_array($results);
+$results = mysqli_query($db,$query2)  or die('Error, query2 failed');
+$row = mysqli_fetch_array($results);
 
 
 
@@ -230,10 +227,11 @@ $row = mysql_fetch_array($results);
                     <li >
                         <a href="account.php"><i class="fa fa-fw fa-edit"></i>User Profile</a>
                     </li>
-
+				<?php if(isset($_SESSION['is_super']) && $_SESSION['is_super'] == 1) { ?>
                     <li >
                         <a href="forms.php"><i class="fa fa-fw fa-edit"></i>Company Profile</a>
                     </li>
+                    <?php } ?>
                     <!--<li>
                         <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
                     </li>
@@ -534,6 +532,16 @@ $row = mysql_fetch_array($results);
                                     displayLabsArg(emailID);
                                 }
 								
+								
+								$('body').on('click','.hidebutton',function(){
+									//console.log("hellozzzzzzzzzzzzz :P");
+									var id = $(this).parent().find('input[type="hidden"]')[0].value;
+									var hidden = $(this).parent().find('input[type="hidden"]')[1].value;
+									//console.log(description);
+									var emailID = "<?php echo $_SESSION['email']; ?>";
+									hideLabsArgs(emailID,id,hidden);
+                                });
+									
 								$('body').on('click','.savebutton',function()
 								{
 									console.log("edit labs called");

@@ -50,11 +50,25 @@
 	
 	if($add_lab == 0) //display all labs
 	{
-		$query = "SELECT * FROM labs;";
+		$query = "SELECT emailID FROM superuser WHERE emailID='$emailID';";
+		$result = mysqli_query($connect,$query);
+		$is_super = mysqli_num_rows($result);
+		//echo $is_super;
+	//	echo $query;
+		if($is_super == 1)
+		{
+			$query = "SELECT * FROM labs;";
+		}
+		else
+		{
+			$query = "SELECT * FROM labs WHERE hidden=0;";
+		}
+	//	echo $query;
 		$result = mysqli_query($connect,$query);
 		$json = array();
 		while($res = mysqli_fetch_array($result))
 		{
+			$res['is_super'] = $is_super;
 			$json[] = $res;
 		}
 		echo json_encode($json);
@@ -76,5 +90,43 @@
 		pincode='$pincode',description='$description',sitelink='$sitelink' WHERE labID=$labID;";
 		echo $query;
 		$result = mysqli_query($connect,$query);
+	}
+	
+	if($add_lab == 3) // hide or unhide the lab
+	{
+		$labID = str_replace("'","\'", $_REQUEST['id']);
+		$hidden = str_replace("'","\'", $_REQUEST['hidden']);
+		if($hidden == 0)
+		{
+			$hidden = 1;
+		}
+		else
+		{
+			$hidden = 0;
+		}
+		$query = "SELECT emailID FROM superuser WHERE emailID='$emailID';";
+		$result = mysqli_query($connect,$query);
+		$is_super = mysqli_num_rows($result);
+		//echo $is_super;
+		$query = "UPDATE labs SET hidden=$hidden WHERE labID=$labID;";
+	//	echo $query;
+		$result = mysqli_query($connect,$query);
+		if($is_super == 1)
+		{
+			$query = "SELECT * FROM labs;";
+		}
+		else
+		{
+			$query = "SELECT * FROM labs WHERE hidden=0;";
+		}
+	//	echo $query;
+		$result = mysqli_query($connect,$query);
+		$json = array();
+		while($res = mysqli_fetch_array($result))
+		{
+			$res['is_super'] = $is_super;
+			$json[] = $res;
+		}
+		echo json_encode($json);
 	}
 ?>
